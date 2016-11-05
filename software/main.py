@@ -4,7 +4,7 @@ from Aux.Aux import *
 import time
 
 
-def gui(interval):
+def gui(interval, port):
     from GUI.gui import TempLogger
 
     app = TempLogger()
@@ -12,11 +12,8 @@ def gui(interval):
     app.mainloop()
 
 
-def cli(interval):
+def cli(interval, port):
     from CLI.cli import TempLogger 
-    # connect to arduino
-    port = get_arduino_port()
-    print(port)
 
     sensor = TempLogger()
 
@@ -27,8 +24,7 @@ def cli(interval):
         t = sensor.getTemperature()
         h = sensor.getHumidity()
 
-        # FIXME needs some formating here to maintain everything always aligned
-        print(t, h)
+        print(t, h, sep = '\t')
 
         time.sleep(interval)
 
@@ -37,16 +33,24 @@ def cli(interval):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--cli", action = "store_true", help = "Do not start GUI.")
-    parser.add_argument("-p", "--port", type = str, default = "/dev/ttyACM0", help = "Serial port connected to Arduino board.")
+    parser.add_argument("-p", "--port", type = str, default = None, help = "Serial port connected to Arduino board.")
     parser.add_argument("-i", "--interval", type = int, default = 2, help = "interval in seconds between measurements. Must be greater than 2.")
     args = parser.parse_args()
 
-    if args.interval <= 2:
+    if args.interval < 2:
         args.interval = 2
         print("Interval between measurments must be 2 or more seconds.")
         print("Set to 2 seconds. \n")
 
-    if args.cli:
-        cli(args.interval)
+    if args.port == None:
+        port = get_arduino_port()
     else:
-        gui(args.interval)
+        port = args.port
+    # FIXME add verbose flag for this shit
+    print("Attached to ", port)
+
+
+    if args.cli:
+        cli(args.interval, port)
+    else:
+        gui(args.interval, port)
