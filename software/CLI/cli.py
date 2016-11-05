@@ -1,10 +1,9 @@
 import serial
+import struct
 
 
 class TempLogger():
     def __init__(self, port, baudrate = 115200):
-        self.t = 0
-        self.h = 0
         self.arduino_port = port
         self.arduino_baudrate = baudrate
 
@@ -13,7 +12,6 @@ class TempLogger():
             print("Connected to", port, "at", baudrate, "bits/sec")
         else:
             raise ValueError("Arduino didn't anwser the call. Check firmware.")
-
 
 
     def testConnection(self):
@@ -30,10 +28,26 @@ class TempLogger():
 
 
     def getTemperature(self):
-        self.t += 0.02
-        return 666 + self.t
+        self.device.write(b'T')
+        ehlo1   = self.device.read(1)
+        datalen = self.device.read(1)
+        data    = self.device.read(int(datalen))
+        ehlo2   = self.device.read(1)
+
+        if ehlo1 == b't' and ehlo2 == b'T':
+            return float(data)
+        else:
+            return None
 
 
     def getHumidity(self):
-        self.h += 0.02
-        return 42 + self.h
+        self.device.write(b'H')
+        ehlo1   = self.device.read(1)
+        datalen = self.device.read(1)
+        data    = self.device.read(int(datalen))
+        ehlo2   = self.device.read(1)
+
+        if ehlo1 == b'h' and ehlo2 == b'H':
+            return float(data)
+        else:
+            return None

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <stdlib.h>
 // temp includes
 #include <inttypes.h>
 #include <math.h>
@@ -15,10 +16,10 @@ void setup()
 	pinMode(ledPin, OUTPUT);
 }
 
-
 void loop()
 {
-	static uint8_t bla = 0;
+	static double bla = -13.74;	// double is the same as a float in avr
+	char result[7] = "87.940";
 
 	// wait serial command
 	if (Serial.available()) {
@@ -34,22 +35,29 @@ void loop()
 
 		case 'T':
 		case 't':
-			// temperature
-			Serial.write((uint8_t) 13);
-			Serial.write((uint8_t) bla++);
-			Serial.write((uint8_t) 200);
+			// fake temperature for now
+			dtostrf(bla, 4, 2, result);
+			Serial.write('t');
+			Serial.print(strlen(result));
+			Serial.print(result);
+			Serial.write('T');
 			break;
 
 		case 'H':
 		case 'h':
-			Serial.write((uint8_t) 42);
-			Serial.write((uint8_t) bla++);
-			Serial.write((uint8_t) 220);
+			dtostrf(bla / 2, 4, 2, result);
+			Serial.write('h');
+			Serial.print(strlen(result));
+			Serial.print(result);
+			Serial.write('H');
 			break;
+
 		default:
 			Serial.print("Command ");
 			Serial.print(command);
-			Serial.print(" not recognized.");
+			Serial.println(" not recognized.");
 		}
+
+		bla += 0.666;
 	}
 }

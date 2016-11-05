@@ -24,10 +24,10 @@ def cli(interval, port):
         t = sensor.getTemperature()
         h = sensor.getHumidity()
 
-        print(t, h, sep = '\t')
+        if t != None and h != None:
+            print(t, h, sep = '\t')
 
         time.sleep(interval)
-
 
 
 if __name__ == "__main__":
