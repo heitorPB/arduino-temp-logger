@@ -10,7 +10,11 @@ class TempLogger():
 
         self.device = serial.Serial(port, baudrate, timeout = 2)
         if self.testConnection():
-            print("Connected to", port, "at ", baudrate, "bits/sec")
+            print("Connected to", port, "at", baudrate, "bits/sec")
+        else:
+            raise ValueError("Arduino didn't anwser the call. Check firmware.")
+
+
 
     def testConnection(self):
         self.device.write(b'e')
@@ -20,8 +24,10 @@ class TempLogger():
 
         if ehlo1 == b'1' and ehlo2 == b'2' and ehlo3 == b'3':
             print("Right arduino connected.")
+            return True
         else:
-            raise ValueError("Arduino didn't anwser the call. Check firmware.")
+            return False
+
 
     def getTemperature(self):
         self.t += 0.02
