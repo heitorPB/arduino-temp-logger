@@ -24,12 +24,22 @@ void loop()
 	if (Serial.available()) {
 		char command = Serial.read();
 		switch (command) {
+		case 'E':
+		case 'e':
+			// send 1 2 3 to confirm this is the firmware
+			Serial.write('1');
+			Serial.write('2');
+			Serial.write('3');
+			break;
+
 		case 'T':
 		case 't':
+			// temperature
 			Serial.write((uint8_t) 13);
 			Serial.write((uint8_t) bla++);
 			Serial.write((uint8_t) 200);
 			break;
+
 		case 'H':
 		case 'h':
 			Serial.write((uint8_t) 42);

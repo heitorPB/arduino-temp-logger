@@ -15,7 +15,7 @@ def gui(interval, port):
 def cli(interval, port):
     from CLI.cli import TempLogger 
 
-    sensor = TempLogger()
+    sensor = TempLogger(port)
 
     print(u"# Temp\tHumidity")
     print(u"# ºC  \t %")
@@ -35,6 +35,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--cli", action = "store_true", help = "Do not start GUI.")
     parser.add_argument("-p", "--port", type = str, default = None, help = "Serial port connected to Arduino board.")
     parser.add_argument("-i", "--interval", type = int, default = 2, help = "interval in seconds between measurements. Must be greater than 2.")
+    # TODO get baudrate
     args = parser.parse_args()
 
     if args.interval < 2:
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     else:
         port = args.port
     # FIXME add verbose flag for this shit
-    print("Attached to ", port)
+    print("Possible Arduino in ", port)
 
 
     if args.cli:
