@@ -1,21 +1,21 @@
 import argparse
 import serial.tools.list_ports
-from Aux.Aux import *
+import Aux.Aux as Aux
 import time
 
 
 def gui(interval, port):
-    from GUI.gui import TempLogger
+    import GUI.gui as gui
 
-    app = TempLogger()
+    app = gui.TempLogger()
     app.master.title(u"ä")
     app.mainloop()
 
 
 def cli(interval, port):
-    from CLI.cli import TempLogger 
+    import CLI.cli as cli
 
-    sensor = TempLogger(port)
+    sensor = cli.TempLogger(port)
 
     print(u"# Temp\tHumidity")
     print(u"# ºC  \t %")
@@ -44,7 +44,7 @@ if __name__ == "__main__":
         print("Set to 2 seconds. \n")
 
     if args.port == None:
-        port = get_arduino_port()
+        port = Aux.get_arduino_port()
     else:
         port = args.port
     # FIXME add verbose flag for this shit
