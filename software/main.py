@@ -7,8 +7,8 @@ import time
 def gui(interval, port):
     import GUI.gui as gui
 
-    app = gui.TempLogger()
-    app.master.title(u"ä")
+    root = gui.root_window('clam')
+    app = gui.TempLogger(master = root)
     app.mainloop()
 
 
