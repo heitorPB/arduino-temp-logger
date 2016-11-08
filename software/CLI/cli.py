@@ -11,16 +11,18 @@ class TempLogger():
         if self.testConnection():
             print("Connected to", port, "at", baudrate, "bits/sec")
         else:
-            raise ValueError("Arduino didn't anwser the call. Check firmware.")
+            raise ValueError("Arduino didn't anwser the call. Check firmware and connection. Make sure no other software is using the port", port)
 
 
     def testConnection(self):
         self.device.write(b'e')
+        ehlo0 = self.device.read(1)
         ehlo1 = self.device.read(1)
         ehlo2 = self.device.read(1)
         ehlo3 = self.device.read(1)
+        ehlo4 = self.device.read(1)
 
-        if ehlo1 == b'1' and ehlo2 == b'2' and ehlo3 == b'3':
+        if ehlo0 == b'e' and ehlo1 == b'1' and ehlo2 == b'2' and ehlo3 == b'3' and ehlo4 == b'E':
             print("Right arduino connected.")
             return True
         else:

@@ -2,6 +2,7 @@ import argparse
 import serial.tools.list_ports
 import Aux.Aux as Aux
 import time
+import sys
 
 
 def gui(interval, port):
@@ -48,6 +49,11 @@ if __name__ == "__main__":
     else:
         port = args.port
     # FIXME add verbose flag for this shit
+    if port == None:
+        print("Didn't find any arduino. Check connection.")
+        print("Bye.\n")
+        sys.exit()
+
     print("Possible Arduino in ", port)
 
 

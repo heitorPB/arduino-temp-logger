@@ -33,9 +33,11 @@ void loop()
 		case 'E':
 		case 'e':
 			// send 1 2 3 to confirm this is the firmware
+			Serial.write('e');
 			Serial.write('1');
 			Serial.write('2');
 			Serial.write('3');
+			Serial.write('E');
 			break;
 
 		case 'T':
