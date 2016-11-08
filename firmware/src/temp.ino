@@ -2,15 +2,20 @@
 #include <Wire.h>
 #include <stdlib.h>
 // temp includes
-#include <inttypes.h>
 #include <math.h>
+// DHT lib from Adafruit
+#include <DHT.h>
 
 
 const unsigned int ledPin = 13;
+const unsigned int dhtPin = 2;
 
+
+DHT dht(dhtPin, DHT22);
 
 void setup()
 {
+	dht.begin();
 	Serial.begin(115200);
 	while (!Serial);
 	pinMode(ledPin, OUTPUT);
@@ -18,8 +23,8 @@ void setup()
 
 void loop()
 {
-	static double bla = -13.74;	// double is the same as a float in avr
-	char result[7] = "87.940";
+	static double bla = -50;	// double is the same as a float in avr
+	char result[8] = "-87.940";
 
 	// wait serial command
 	if (Serial.available()) {
@@ -35,8 +40,10 @@ void loop()
 
 		case 'T':
 		case 't':
-			// fake temperature for now
-			dtostrf(bla, 4, 2, result);
+			bla = dht.readTemperature();
+			if (isnan(bla))
+				bla = -50;
+			dtostrf(bla, 4, 3, result);
 			Serial.write('t');
 			Serial.print(strlen(result));
 			Serial.print(result);
@@ -45,7 +52,10 @@ void loop()
 
 		case 'H':
 		case 'h':
-			dtostrf(bla / 2, 4, 2, result);
+			bla = dht.readHumidity();
+			if (isnan(bla))
+				bla = -50;
+			dtostrf(bla, 4, 3, result);
 			Serial.write('h');
 			Serial.print(strlen(result));
 			Serial.print(result);
@@ -57,7 +67,5 @@ void loop()
 			Serial.print(command);
 			Serial.println(" not recognized.");
 		}
-
-		bla += 0.666;
 	}
 }

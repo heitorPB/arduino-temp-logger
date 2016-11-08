@@ -34,7 +34,7 @@ class TempLogger():
         data    = self.device.read(int(datalen))
         ehlo2   = self.device.read(1)
 
-        if ehlo1 == b't' and ehlo2 == b'T':
+        if ehlo1 == b't' and ehlo2 == b'T' and float(data) != -50:
             return float(data)
         else:
             return None
@@ -47,7 +47,7 @@ class TempLogger():
         data    = self.device.read(int(datalen))
         ehlo2   = self.device.read(1)
 
-        if ehlo1 == b'h' and ehlo2 == b'H':
+        if ehlo1 == b'h' and ehlo2 == b'H' and float(data) != -50:
             return float(data)
         else:
             return None
